@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, url_for, redirect, flash
 from app.db_connect import get_db
 from ..functions import calculate_grade
+
 grades = Blueprint('grades', __name__)
 
 @grades.route('/grade', methods=['GET', 'POST'])
@@ -15,7 +16,7 @@ def grade():
 
         number_grade = int(number_grade)
 
-       # call the function to calculate the letter grade
+        # Call the function to calculate the letter grade
         letter_grade = calculate_grade(number_grade)
 
         # Insert the new grade info into the database
@@ -35,9 +36,10 @@ def update_grade(grade_id):
 
     if request.method == 'POST':
         # Update the grade's details
-        number_grade = request.form['number_grade']
+        number_grade = int(request.form['number_grade'])
         student_name = request.form['student_name']
-        # call the function to calculate the letter grade
+
+        # Call the function to calculate the letter grade
         letter_grade = calculate_grade(number_grade)
 
         cursor.execute('UPDATE grades SET letter_grade = %s, student_name = %s WHERE grade_id = %s',
@@ -60,11 +62,3 @@ def delete_grade(grade_id):
     cursor.execute('DELETE FROM grades WHERE grade_id = %s', (grade_id,))
     db.commit()
     return redirect(url_for('grades.grade'))
-
-
-
-
-#######
-
-
-
